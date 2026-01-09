@@ -1,0 +1,77 @@
+@startuml 感兴趣目标提取系统时序图
+
+skinparam sequenceMessageAlign center
+skinparam actorStyle awesome
+skinparam sequenceBoxBorderColor #2266AA
+skinparam sequenceBoxBackgroundColor #D8E6F3
+
+actor 用户 as User
+participant "用户界面" as UI
+participant "系统控制器" as Controller
+participant "图像处理器" as ImageProcessor
+participant "分割算法" as Segmentation
+participant "特征提取器" as FeatureExtractor
+participant "区域合并器" as RegionMerger
+
+== 系统启动与图像输入 ==
+User -> UI: 启动系统
+UI -> Controller: 初始化系统
+Controller -> ImageProcessor: 准备处理模块
+ImageProcessor --> Controller: 模块就绪
+Controller --> UI: 系统初始化完成
+
+User -> UI: 选择图像文件
+UI -> Controller: 加载图像请求
+Controller -> ImageProcessor: 读取图像(path)
+ImageProcessor --> Controller: 返回图像数据
+Controller --> UI: 显示原始图像
+
+== 图像预处理 ==
+User -> UI: 点击预处理按钮
+UI -> Controller: 执行预处理请求
+Controller -> ImageProcessor: 图像预处理()
+ImageProcessor -> ImageProcessor: 噪声滤除()
+ImageProcessor -> ImageProcessor: 对比度增强()
+ImageProcessor --> Controller: 返回预处理图像
+Controller --> UI: 更新图像显示
+
+== 分割算法选择与执行 ==
+User -> UI: 选择分割算法
+UI -> Controller: 设置算法类型()
+Controller -> Segmentation: 创建算法实例()
+
+User -> UI: 设置分割参数
+UI -> Controller: 参数配置()
+Controller -> Segmentation: 参数设置()
+
+User -> UI: 执行分割
+UI -> Controller: 开始分割()
+Controller -> Segmentation: 图像分割(图像数据)
+Segmentation -> Segmentation: 执行分割算法
+Segmentation --> Controller: 返回分割结果
+Controller --> UI: 显示分割结果
+
+== 特征提取 ==
+Controller -> FeatureExtractor: 特征提取(分割结果)
+FeatureExtractor -> FeatureExtractor: 颜色特征计算()
+FeatureExtractor -> FeatureExtractor: 纹理特征计算()
+FeatureExtractor -> FeatureExtractor: 形状特征计算()
+FeatureExtractor -> FeatureExtractor: 特征向量生成()
+FeatureExtractor --> Controller: 返回特征数据
+
+== 区域合并 ==
+Controller -> RegionMerger: 区域合并(特征数据)
+RegionMerger -> RegionMerger: 相似性计算()
+RegionMerger -> RegionMerger: 区域合并()
+RegionMerger -> RegionMerger: 目标提取()
+RegionMerger --> Controller: 返回目标区域
+Controller --> UI: 显示提取结果
+
+== 结果保存 ==
+User -> UI: 点击保存按钮
+UI -> Controller: 保存结果请求
+Controller -> ImageProcessor: 保存图像(结果图像)
+ImageProcessor --> Controller: 保存成功
+Controller --> UI: 显示保存完成提示
+
+@enduml

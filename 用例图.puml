@@ -1,0 +1,69 @@
+@startuml 感兴趣目标提取系统用例图
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor 用户 as User
+actor 系统管理员 as Admin
+
+rectangle "感兴趣目标提取系统" {
+    usecase "图像输入" as UC1
+    usecase "图像预处理" as UC2
+    usecase "选择分割算法" as UC3
+    usecase "分水岭算法分割" as UC4
+    usecase "SLIC超像素分割" as UC5
+    usecase "N-cut方法分割" as UC6
+    usecase "特征提取" as UC7
+    usecase "区域合并" as UC8
+    usecase "结果可视化" as UC9
+    usecase "参数设置" as UC10
+    usecase "结果保存" as UC11
+    usecase "系统配置" as UC12
+    usecase "算法管理" as UC13
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC9
+User --> UC10
+User --> UC11
+
+UC3 --> UC4 : include
+UC3 --> UC5 : include
+UC3 --> UC6 : include
+
+UC2 --> UC7 : extend
+UC4 --> UC7 : extend
+UC5 --> UC7 : extend
+UC6 --> UC7 : extend
+
+UC7 --> UC8 : extend
+UC8 --> UC9 : extend
+
+Admin --> UC12
+Admin --> UC13
+
+note right of UC4
+  基于距离变换的
+  分水岭分割算法
+end note
+
+note right of UC5
+  k-means聚类
+  超像素分割
+end note
+
+note right of UC6
+  图割理论
+  标准分割方法
+end note
+
+note right of UC7
+  颜色特征
+  纹理特征
+  形状特征
+end note
+
+@enduml
